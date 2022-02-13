@@ -1,0 +1,75 @@
+﻿@{ 
+    Class sel_class = ViewBag.SelClass;
+
+    string UserId = ViewBag.UserID;
+
+}
+
+<div class="container" ng-app="ASystem" ng-controller="ClassDetailController">
+    <div ng-init="SetTimer()" class="col-12 row">
+        <div class="col-12 col-xl-6">
+            <div class="form-group">
+                <label for="usr" class="col-form-label font-weight-bold">Course :</label>
+                <br />
+                <label for="usr">@(sel_class.Course.ID + " - " +sel_class.Course.Name)</label>
+            </div>
+            <div class="form-group">
+                <label for="usr" class="col-form-label font-weight-bold">Location :</label>
+                <br />
+                <label for="usr">@(sel_class.Location)</label>
+            </div>
+            <div class="form-group">
+                <label for="usr" class="col-form-label font-weight-bold">From :</label>
+                <br />
+                <label for="usr">@(sel_class.FromTime.ToString())</label>
+            </div>
+            <div class="form-group">
+                <label for="usr" class="col-form-label font-weight-bold">To :</label>
+                <br />
+                <label for="usr">@(sel_class.ToTime.ToString())</label>
+            </div>
+            <div class="form-group">
+                <label for="usr" class="col-form-label font-weight-bold">Class Type :</label>
+                <br />
+                <label for="usr">@(sel_class.Type)</label>
+            </div>
+        </div>
+        <div class="col-12 col-xl-6">
+            <img id='barcode'
+                 src="https://api.qrserver.com/v1/create-qr-code/?data=HelloWorld&amp;size=100x100"
+                 alt=""
+                 title="Attendance"
+                 width="500"
+                 height="500" />
+        </div>
+    </div>
+</div>
+
+<script>
+    var app = angular.module('ASystem', []);
+
+    app.controller('ClassDetailController', function ($scope, $http) {
+        $scope.GetToken = function () {
+            var data = {
+                UserID : '@UserId',
+                ClassID : '@(sel_class.ID.ToString())'
+            }
+             $http.post('@Url.Action("GetCode", "App")', JSON.stringify(data)).then(function (response) {
+                 if (response.data.status == 200) {
+                     var url = 'https://api.qrserver.com/v1/create-qr-code/?data=' + response.data.token + '&amp;size=50x50';
+                     $('#barcode').attr('src', url);
+                } else {
+                     window.alert("Get Token Failed");
+                     clearInterval(interval);
+                }
+            });
+        }
+        $scope.SetTimer = function () {
+            $scope.GetToken();
+            const interval = setInterval(function () {
+                $scope.GetToken();
+            }, 20000);   //every 20 second
+            //clearInterval(interval);
+        }
+    });
+</script>

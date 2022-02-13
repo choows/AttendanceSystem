@@ -1,0 +1,145 @@
+﻿@using AttendanceSystem.Functions
+@{
+    ViewData["HideNavigation"] = true;
+}
+<div class="container" ng-app="ASystem" ng-controller="LoginController">
+
+    <div class="page_centre">
+        <div class="form-group">
+            <label for="login_username">Staff ID / Student ID</label>
+            <input type="text" class="form-control" ng-model="ID" aria-describedby="emailHelp" placeholder="ID">
+        </div>
+        <div class="form-group">
+            <label for="login_username">User Name</label>
+            <input type="text" class="form-control" ng-model="UserName" aria-describedby="emailHelp" placeholder="User Name">
+        </div>
+        <div class="form-group">
+            <label for="login_password">Password</label>
+            <input type="password" class="form-control" ng-model="Password" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <label for="login_password">Confirm Password</label>
+            <input type="password" class="form-control" ng-model="ConfirmPassword" placeholder="Confirm Password">
+        </div>
+        <div class="form-group">
+            <label for="login_username">Name</label>
+            <input type="text" class="form-control" ng-model="Name" aria-describedby="emailHelp" placeholder="Name">
+        </div>
+        <div class="form-group">
+            <label for="login_username">Email</label>
+            <input type="text" class="form-control" ng-model="Email" aria-describedby="emailHelp" placeholder="Email">
+        </div>
+        
+        <div class="form-group">
+            <label for="login_username">Role</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" checked name="Role" value="@Constants.Role_Student">
+                    <label class="form-check-label" for="inlineRadio1">Student</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="Role" value="@Constants.Role_Lec">
+                    <label class="form-check-label" for="inlineRadio2">Lecturer</label>
+                </div>
+            </div>
+            
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width : 100%;" ng-click="Register()">Register</button>
+    </div>
+    </div>
+<script>
+    var app = angular.module('ASystem', []);
+
+    app.controller('LoginController', function ($scope, $http) {
+        $scope.UserNameError = "";
+        $scope.PasswordError = "";
+        $scope.ResetError = function () {
+            $scope.UserNameError = "";
+            $scope.PasswordError = "";
+        }
+        $scope.Register = function(){
+            var role = $("input[name='Role']:checked").val();
+            var ID = $scope.ID;
+            var UserName = $scope.UserName;
+            var Password = $scope.Password;
+            var ConfirmPassword = $scope.ConfirmPassword;
+            var Name = $scope.Name;
+            var Email = $scope.Email;
+            if (ID == "" || ID == null) {
+                window.alert("ID is required");
+                return;
+            }
+            if (UserName == "" || UserName == null) {
+                window.alert("User Name is Required");
+                return;
+            }
+            if (Password == "" || Password == null) {
+                window.alert("Password Required");
+                return;
+            }
+            if (ConfirmPassword == "" || ConfirmPassword == null) {
+                window.alert("Confirm Password Required.");
+                return;
+            }
+            if (Name == "" || Name == null) {
+                window.alert("Name Required");
+                return;
+            }
+            if (Email == "" || Email == null) {
+                window.alert("Email Required");
+                return;
+            }
+            if (Password != ConfirmPassword) {
+                window.alert("Unmatch Password.");
+                return;
+            }
+            var emailvalidate = String(Email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@@"]+(\.[^<>()[\]\\.,;:\s@@"]+)*)|(".+"))@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+            if (!emailvalidate) {
+                window.alert("Invalid Email Format");
+                return;
+            }
+            var data = {
+                UserName: UserName,
+                Password: Password,
+                Email: Email,
+                ID: ID,
+                Name: Name,
+                Role: role
+            }
+            //RegisterNewUser
+            $http.post('@Url.Action("RegisterNewUser", "App")', JSON.stringify(data)).then(function (response) {
+                 
+                if (response.data.status == 200) {
+                    window.open('@Url.Action("Login" , "Home")', '_self');
+                } else {
+                    window.alert("Register Failed");
+                }
+            });
+
+        }
+
+        $scope.Login = function () {
+            $scope.ResetError();
+            if ($scope.UserName == "" || $scope.UserName == null) {
+                $scope.UserNameError = "UserName Required";
+                return;
+            }
+            if ($scope.Password == "") {
+                $scope.PasswordError = "Password Required";
+                return;
+            }
+            var data = {
+                UserName: $scope.UserName,
+                Password : $scope.Password
+            }
+            $http.post('@Url.Action("WebLogin", "App")', JSON.stringify(data)).then(function (response) {
+                if (response.data.status == 200) {
+                    window.open('@Url.Action("Index" , "Home")', '_self');
+                } else {
+                    window.alert("Login Failed");
+                }
+            });
+        }
+    });
+</script>

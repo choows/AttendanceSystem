@@ -1,0 +1,1 @@
+2022-2-12:23:22:35.839	GetClassByCourse	Could not load file or assembly 'System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL'. The system cannot find the file specified.

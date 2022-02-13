@@ -1,0 +1,11 @@
+2022-2-13:17:44:39.561	GetCode	Course Not Registered
+2022-2-13:17:46:34.969	GetCode	Could not load file or assembly 'System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL'. The system cannot find the file specified.
+2022-2-13:19:51:20.695	GetCode	User Not found
+2022-2-13:20:2:11.534	GetCode	User Not found
+2022-2-13:20:2:25.811	GetCode	User Not found
+2022-2-13:20:2:36.271	GetCode	User Not found
+2022-2-13:20:2:49.176	GetCode	User Not found
+2022-2-13:20:2:57.490	GetCode	User Not found
+2022-2-13:20:3:27.802	GetCode	User Not found
+2022-2-13:20:3:58.497	GetCode	User Not found
+2022-2-13:20:4:31.684	GetCode	User Not found

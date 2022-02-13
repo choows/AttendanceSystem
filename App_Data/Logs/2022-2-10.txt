@@ -1,0 +1,7 @@
+2022-2-10:15:7:31.820	WebLogin	An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+2022-2-10:15:8:24.912	WebLogin	Cannot open database "StoreDB" requested by the login. The login failed.
+Login failed for user 'PCSBMY\0023135'.
+2022-2-10:15:10:47.326	WebLogin	An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+2022-2-10:15:29:38.390	WebLogin	An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
+2022-2-10:15:30:3.933	WebLogin	Cannot open database "StoreDB" requested by the login. The login failed.
+Login failed for user 'PCSBMY\0023135'.

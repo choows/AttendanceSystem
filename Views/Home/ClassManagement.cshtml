@@ -1,0 +1,154 @@
+﻿@{ 
+    List<Class> classes = ViewBag.Classes;
+    List<Course> courses = ViewBag.Courses;
+
+
+}
+
+<div class="container" ng-app="ASystem" ng-controller="ClassController">
+    <div class="row align-items-end col-12 align-content-end">
+        <button class="btn btn-primary align-self-end" data-toggle="modal" data-target="#NewCourseModal">+</button>
+    </div>
+    <br />
+    <div class="col-12">
+        <table class="table table-responsive col-12">
+            <thead>
+                <tr>
+                    <th>From </th>
+                    <th>To</th>
+                    <th>Location</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var c in classes)
+                    {
+                                <tr ng-click="GoToClass('@(c.ID.ToString())')">
+                                    <td>@(c.FromTime.ToString())</td>
+                                    <td>@(c.ToTime.ToString())</td>
+                                    <td>@(c.Location)</td>
+                                    <td>@(c.Type)</td>
+                                    <td>@(c.Description)</td>
+                                </tr>
+                       
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div id="NewCourseModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <label class="modal-title">New Class</label>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="login_username">Course ID</label>
+                        <select class="custom-select" ng-model="NewClassCourse">
+                            @{
+                                foreach (var c in courses)
+                                {
+                                    <option value="@(c.ID)">@(c.Name)</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="login_username">From</label>
+                        <input type="datetime-local" class="form-control" ng-model="From" aria-describedby="emailHelp" placeholder="Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="login_username">To</label>
+                        <input type="datetime-local" class="form-control" ng-model="To" aria-describedby="emailHelp" placeholder="Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="login_username">Location</label>
+                        <input type="text" class="form-control" ng-model="Location" aria-describedby="emailHelp" placeholder="Location">
+                    </div>
+                    <div class="form-group">
+                        <label for="login_username">Type</label>
+                        <select class="custom-select" ng-model="NewClassType" ng-init="NewClassType='Lecture'">
+                            <option value="Lecture" selected>Lecture</option>
+                            <option value="Practical">Practical</option>
+                            <option value="Tutorial">Tutorial</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="login_username">Description</label>
+                        <input type="text" class="form-control" ng-model="Description" aria-describedby="emailHelp" placeholder="Description">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="CloseAddModel" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="SaveNewClass()">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    var app = angular.module('ASystem', []);
+
+    app.controller('ClassController', function ($scope, $http) {
+        $scope.SaveNewClass = function () {
+
+            var CourseID = $scope.NewClassCourse;
+            var from = $scope.From;
+            var to = $scope.To;
+            var Location = $scope.Location;
+            var Type = $scope.NewClassType;
+            var Descp = $scope.Description;
+            var UserID = '@ViewBag.UserId';
+
+            if (!CourseID) {
+                window.alert("Course Required");
+                return;
+            }
+            if (!from) {
+                window.alert("From Date time Required.");
+                return;
+            }
+            if (!to) {
+                window.alert("To Date time Required");
+                return;
+            }
+            if (!Location) {
+                window.alert("Location Required");
+                return;
+            }
+            if (!UserID) {
+                window.alert("User ID Required");
+                return;
+            }
+            var data = {
+                FromDate: from,
+                ToDate: to,
+                Location: Location,
+                Description: Descp,
+                CourseID: CourseID,
+                Type: Type,
+                UserID : UserID
+            }
+            $http.post('@Url.Action("AddNewClass", "App")', JSON.stringify(data)).then(function (response) {
+                 if (response.data.status == 200) {
+                     window.alert("Done Insert New Class");
+                     $("#CloseAddModel").click();
+                     location.reload();
+                } else {
+                    window.alert("Add New class Failed");
+                }
+            });
+
+        }
+        $scope.GoToClass = function (classid) {
+            window.open('@Url.Action("ClassDetail", "Home")' + '?ClassID=' + classid);
+        }
+    });
+
+</script>

@@ -1,0 +1,69 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["HideNavigation"] = true;
+}
+<div class="container" ng-app="ASystem" ng-controller="LoginController">
+
+    <div class="page_centre">
+        <div class="text-center">
+            <h1 class="font_header">Attendance System</h1>
+        </div>
+        <div class="form-group">
+            <label for="login_username">User Name</label>
+            <input type="text" class="form-control" ng-model="UserName" aria-describedby="emailHelp" placeholder="User Name">
+            <label class="form-text text-danger">{{UserNameError}}</label>
+        </div>
+        <div class="form-group">
+            <label for="login_password">Password</label>
+            <input type="password" class="form-control" ng-model="Password" placeholder="Password">
+            <label class="form-text text-danger">{{PasswordError}}</label>
+
+        </div>
+        <div class="form-group col-12 row">
+            <div class="col-6" style="text-align:start">
+                <a href="@Url.Action("Register" , "Home")" style="width: fit-content;"> Register Now</a>
+            </div>
+            <div class="col-6" style="text-align : end">
+                <a href="javascript:window.alert('Forgot Password')" style="width: fit-content; text-decoration: underline;"> Forgot Password ? </a>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width : 100%;" ng-click="Login()">Submit</button>
+    </div>
+</div>
+<script>
+    var app = angular.module('ASystem', []);
+
+    app.controller('LoginController', function ($scope, $http) {
+        $scope.UserNameError = "";
+        $scope.PasswordError = "";
+        $scope.ResetError = function () {
+            $scope.UserNameError = "";
+            $scope.PasswordError = "";
+        }
+
+        $scope.Login = function () {
+            $scope.ResetError();
+            if ($scope.UserName == "" || $scope.UserName == null) {
+                $scope.UserNameError = "UserName Required";
+                return;
+            }
+            if ($scope.Password == "") {
+                $scope.PasswordError = "Password Required";
+                return;
+            }
+            var data = {
+                UserName: $scope.UserName,
+                Password : $scope.Password
+            }
+            $http.post('@Url.Action("WebLogin", "App")', JSON.stringify(data)).then(function (response) {
+                if (response.data.status == 200) {
+                    window.open('@Url.Action("Index" , "Home")', '_self');
+                } else {
+                    window.alert("Login Failed");
+                }
+            });
+        }
+    });
+</script>
